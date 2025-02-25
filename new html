@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Post</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Post to Twitter</h1>
+    <form id="tweetForm">
+        <label for="tweetText">Complaint:</label>
+        <textarea id="tweetText" required></textarea><br>
+        <label for="tweetImage">Image:</label>
+        <input type="file" id="tweetImage" accept="image/*"><br>
+
+        <!-- Tag Options -->
+        <label for="tagLokayukta">Tag Lokayukta of Karnataka:</label>
+        <input type="checkbox" id="tagLokayukta"><br>
+        <label for="tagBBMP">Tag BBMP:</label>
+        <input type="checkbox" id="tagBBMP"><br>
+
+        <!-- Optional Name Field -->
+        <label for="userName">Your Name (Optional):</label>
+        <input type="text" id="userName"><br>
+
+        <button type="submit">Post</button>
+    </form>
+    <script src="app.js"></script>
+</body>
+</html>
