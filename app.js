@@ -6,8 +6,9 @@ document.getElementById('tweetForm').addEventListener('submit', async function (
     const tagLokayukta = document.getElementById('tagLokayukta').checked;
     const tagBBMP = document.getElementById('tagBBMP').checked;
     const userName = document.getElementById('userName').value;
-    const location = await getLocation();
-
+    const locationElement = document.getElementById('location');
+    
+    let location = await getLocation();
     let tweetContent = tweetText;
 
     // Add tags to tweet content
@@ -21,6 +22,13 @@ document.getElementById('tweetForm').addEventListener('submit', async function (
     // Add user name if provided
     if (userName) {
         tweetContent += ` - ${userName}`;
+    }
+
+    // Add location to tweet content
+    if (location) {
+        tweetContent += ` [Location: ${location.latitude}, ${location.longitude}]`;
+        locationElement.textContent = `Location: ${location.latitude}, ${location.longitude}`;
+        locationElement.style.display = 'block';
     }
 
     console.log('Tweet Content:', tweetContent);
