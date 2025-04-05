@@ -1,3 +1,13 @@
+require('dotenv').config();
+const Twitter = require('twitter');
+
+const client = new Twitter({
+  consumer_key: process.env.TWITTER_API_KEY,
+  consumer_secret: process.env.TWITTER_API_SECRET,
+  access_token_key: process.env.TWITTER_ACCESS_TOKEN,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+});
+
 document.getElementById('tweetForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
@@ -35,7 +45,8 @@ document.getElementById('tweetForm').addEventListener('submit', async function (
     console.log('Tweet Image:', tweetImage);
     console.log('Location:', location);
 
-    // Add code to post to Twitter using API
+    // Post to Twitter using API
+    postTweet(tweetContent, tweetImage);
 });
 
 async function getLocation() {
@@ -51,4 +62,42 @@ async function getLocation() {
             reject('Geolocation not supported');
         }
     });
+}
+
+function postTweet(status, media) {
+    if (media) {
+        // Upload media first
+        const formData = new FormData();
+        formData.append('media', media);
+
+        fetch('https://upload.twitter.com/1.1/media/upload.json', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Authorization': `Bearer ${process.env.TWITTER_ACCESS_TOKEN}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const mediaId = data.media_id_string;
+            // Now post the tweet with media
+            client.post('statuses/update', { status, media_ids: mediaId }, function(error, tweet, response) {
+                if (error) {
+                    console.error('Error posting tweet:', error);
+                } else {
+                    console.log('Tweet posted successfully:', tweet);
+                }
+            });
+        })
+        .catch(error => console.error('Error uploading media:', error));
+    } else {
+        // Post the tweet without media
+        client.post('statuses/update', { status }, function(error, tweet, response) {
+            if (error) {
+                console.error('Error posting tweet:', error);
+            } else {
+                console.log('Tweet posted successfully:', tweet);
+            }
+        });
+    }
 }
